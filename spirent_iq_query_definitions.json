@@ -1,0 +1,518 @@
+{"Detailed Stream Results": {
+    "multi_result": {
+      "filters": [],
+      "groups": [],
+      "orders": [
+        "view.tx_stream_stream_id ASC",
+        "view.rx_stream_key ASC"
+      ],
+      "projections": [
+        "view.stream_block_name as stream_block_name",
+        "view.tx_stream_stream_id as tx_stream_stream_id",
+        "view.tx_port_name as tx_port_name",
+        "view.rx_port_name as rx_port_name",
+        "view.src_endpoint_name as src_endpoint_name",
+        "view.dst_endpoint_name as dst_endpoint_name",
+        "view.tx_stream_config_ipv4_1_source_addr as tx_stream_config_ipv4_1_source_addr",
+        "view.tx_stream_config_ipv4_1_dest_addr as tx_stream_config_ipv4_1_dest_addr",
+        "view.tx_stream_config_eth2_1_src_mac as tx_stream_config_eth2_1_src_mac",
+        "view.tx_stream_config_eth2_1_dst_mac as tx_stream_config_eth2_1_dst_mac",
+        "view.tx_stream_config_ipv4_2_source_addr as tx_stream_config_ipv4_2_source_addr",
+        "view.tx_stream_config_ipv4_2_dest_addr as tx_stream_config_ipv4_2_dest_addr",
+        "view.tx_stream_config_eth2_2_src_mac as tx_stream_config_eth2_2_src_mac",
+        "view.tx_stream_config_eth2_2_dst_mac as tx_stream_config_eth2_2_dst_mac",
+        "view.tx_stream_config_eth2_vlan_1_id as tx_stream_config_eth2_vlan_1_id",
+        "view.tx_stream_config_eth2_vlan_2_id as tx_stream_config_eth2_vlan_2_id",
+        "view.tx_stream_config_eth2_vlan_3_id as tx_stream_config_eth2_vlan_3_id",
+        "view.tx_stream_config_eth2_vlan_4_id as tx_stream_config_eth2_vlan_4_id",
+        "view.tx_stream_stats_frame_count as tx_stream_stats_frame_count",
+        "view.rx_stream_stats_frame_count as rx_stream_stats_frame_count",
+        "view.tx_stream_stats_frame_rate as tx_stream_stats_frame_rate",
+        "view.rx_stream_stats_frame_rate as rx_stream_stats_frame_rate",
+        "view.tx_stream_stats_l1_bit_rate as tx_stream_stats_l1_bit_rate",
+        "view.rx_stream_stats_l1_bit_rate as rx_stream_stats_l1_bit_rate",
+        "view.stream_stats_frame_loss as stream_stats_frame_loss",
+        "view.rx_stream_stats_dropped_frame_count as rx_stream_stats_dropped_frame_count",
+        "view.rx_stream_stats_min_latency as rx_stream_stats_min_latency",
+        "view.rx_stream_stats_avg_latency as rx_stream_stats_avg_latency",
+        "view.rx_stream_stats_max_latency as rx_stream_stats_max_latency",
+        "view.rx_stream_stats_duplicate_frame_count as rx_stream_stats_duplicate_frame_count",
+        "view.rx_stream_stats_out_seq_frame_count as rx_stream_stats_out_seq_frame_count",
+        "view.rx_stream_key as rx_stream_key"
+      ],
+      "subqueries": [
+        {
+          "alias": "view",
+          "filters": [
+            "rxss.tx_stream_stream_id=txss.tx_stream_stream_id"
+          ],
+          "groups": [],
+          "projections": [
+            "rxss.stream_block_name as stream_block_name",
+            "rxss.tx_stream_stream_id as tx_stream_stream_id",
+            "rxss.tx_port_name as tx_port_name",
+            "rxss.rx_port_name as rx_port_name",
+            "rxss.src_endpoint_name as src_endpoint_name",
+            "rxss.dst_endpoint_name as dst_endpoint_name",
+            "rxss.tx_stream_config_ipv4_1_source_addr as tx_stream_config_ipv4_1_source_addr",
+            "rxss.tx_stream_config_ipv4_1_dest_addr as tx_stream_config_ipv4_1_dest_addr",
+            "rxss.tx_stream_config_eth2_1_src_mac as tx_stream_config_eth2_1_src_mac",
+            "rxss.tx_stream_config_eth2_1_dst_mac as tx_stream_config_eth2_1_dst_mac",
+            "rxss.tx_stream_config_ipv4_2_source_addr as tx_stream_config_ipv4_2_source_addr",
+            "rxss.tx_stream_config_ipv4_2_dest_addr as tx_stream_config_ipv4_2_dest_addr",
+            "rxss.tx_stream_config_eth2_2_src_mac as tx_stream_config_eth2_2_src_mac",
+            "rxss.tx_stream_config_eth2_2_dst_mac as tx_stream_config_eth2_2_dst_mac",
+            "rxss.tx_stream_config_eth2_vlan_1_id as tx_stream_config_eth2_vlan_1_id",
+            "rxss.tx_stream_config_eth2_vlan_2_id as tx_stream_config_eth2_vlan_2_id",
+            "rxss.tx_stream_config_eth2_vlan_3_id as tx_stream_config_eth2_vlan_3_id",
+            "rxss.tx_stream_config_eth2_vlan_4_id as tx_stream_config_eth2_vlan_4_id",
+            "txss.frame_count as tx_stream_stats_frame_count",
+            "rxss.frame_count as rx_stream_stats_frame_count",
+            "txss.frame_rate as tx_stream_stats_frame_rate",
+            "rxss.frame_rate as rx_stream_stats_frame_rate",
+            "txss.l1_bit_rate as tx_stream_stats_l1_bit_rate",
+            "rxss.l1_bit_rate as rx_stream_stats_l1_bit_rate",
+            "greatest(0, rxss.dropped_frame_count, (txss.frame_count - (rxss.frame_count - greatest(0, rxss.duplicate_frame_count)) - (greatest(txss.frame_rate, rxss.frame_rate) * ( 2 + greatest(0,(txss.counter_timestamp - rxss.counter_timestamp)/40000000))))) as stream_stats_frame_loss",
+            "rxss.dropped_frame_count as rx_stream_stats_dropped_frame_count",
+            "rxss.min_latency as rx_stream_stats_min_latency",
+            "rxss.avg_latency as rx_stream_stats_avg_latency",
+            "rxss.max_latency as rx_stream_stats_max_latency",
+            "rxss.duplicate_frame_count as rx_stream_stats_duplicate_frame_count",
+            "rxss.out_seq_frame_count as rx_stream_stats_out_seq_frame_count",
+            "rxss.rx_stream_key as rx_stream_key"
+          ],
+          "subqueries": [
+            {
+              "alias": "rxss",
+              "filters": [
+                "rx_stream_live_stats$last.is_deleted = false"
+              ],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "rx_port.name as rx_port_name",
+                "(rx_stream_live_stats$last.frame_count) as frame_count",
+                "src_endpoint.name as src_endpoint_name",
+                "dst_endpoint.name as dst_endpoint_name",
+                "tx_stream_config.ipv4_1_source_addr as tx_stream_config_ipv4_1_source_addr",
+                "tx_stream_config.ipv4_1_dest_addr as tx_stream_config_ipv4_1_dest_addr",
+                "tx_stream_config.eth2_1_src_mac as tx_stream_config_eth2_1_src_mac",
+                "tx_stream_config.eth2_1_dst_mac as tx_stream_config_eth2_1_dst_mac",
+                "tx_stream_config.ipv4_2_source_addr as tx_stream_config_ipv4_2_source_addr",
+                "tx_stream_config.ipv4_2_dest_addr as tx_stream_config_ipv4_2_dest_addr",
+                "tx_stream_config.eth2_2_src_mac as tx_stream_config_eth2_2_src_mac",
+                "tx_stream_config.eth2_2_dst_mac as tx_stream_config_eth2_2_dst_mac",
+                "tx_stream_config.eth2_vlan_1_id as tx_stream_config_eth2_vlan_1_id",
+                "tx_stream_config.eth2_vlan_2_id as tx_stream_config_eth2_vlan_2_id",
+                "tx_stream_config.eth2_vlan_3_id as tx_stream_config_eth2_vlan_3_id",
+                "tx_stream_config.eth2_vlan_4_id as tx_stream_config_eth2_vlan_4_id",
+                "(rx_stream_live_stats$last.frame_rate) as frame_rate",
+                "(rx_stream_live_stats$last.l1_bit_rate) as l1_bit_rate",
+                "(rx_stream_live_stats$last.counter_timestamp) as counter_timestamp",
+                "(rx_stream_live_stats$last.dropped_frame_count) as dropped_frame_count",
+                "(rx_stream_live_stats$last.duplicate_frame_count) as duplicate_frame_count",
+                "(rx_stream_live_stats$last.min_latency) as min_latency",
+                "(rx_stream_live_stats$last.total_latency/rx_stream_live_stats$last.frame_count) as avg_latency",
+                "(rx_stream_live_stats$last.max_latency) as max_latency",
+                "(rx_stream_live_stats$last.out_seq_frame_count) as out_seq_frame_count",
+                "rx_stream.key as rx_stream_key"
+              ]
+            },
+            {
+              "alias": "txss",
+              "filters": [
+                "tx_stream_live_stats$last.is_deleted = false"
+              ],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "(tx_stream_live_stats$last.frame_count) as frame_count",
+                "src_endpoint.name as src_endpoint_name",
+                "dst_endpoint.name as dst_endpoint_name",
+                "tx_stream_config.ipv4_1_source_addr as tx_stream_config_ipv4_1_source_addr",
+                "tx_stream_config.ipv4_1_dest_addr as tx_stream_config_ipv4_1_dest_addr",
+                "tx_stream_config.eth2_1_src_mac as tx_stream_config_eth2_1_src_mac",
+                "tx_stream_config.eth2_1_dst_mac as tx_stream_config_eth2_1_dst_mac",
+                "tx_stream_config.ipv4_2_source_addr as tx_stream_config_ipv4_2_source_addr",
+                "tx_stream_config.ipv4_2_dest_addr as tx_stream_config_ipv4_2_dest_addr",
+                "tx_stream_config.eth2_2_src_mac as tx_stream_config_eth2_2_src_mac",
+                "tx_stream_config.eth2_2_dst_mac as tx_stream_config_eth2_2_dst_mac",
+                "tx_stream_config.eth2_vlan_1_id as tx_stream_config_eth2_vlan_1_id",
+                "tx_stream_config.eth2_vlan_2_id as tx_stream_config_eth2_vlan_2_id",
+                "tx_stream_config.eth2_vlan_3_id as tx_stream_config_eth2_vlan_3_id",
+                "tx_stream_config.eth2_vlan_4_id as tx_stream_config_eth2_vlan_4_id",
+                "(tx_stream_live_stats$last.frame_rate) as frame_rate",
+                "(tx_stream_live_stats$last.l1_bit_rate) as l1_bit_rate",
+                "(tx_stream_live_stats$last.counter_timestamp) as counter_timestamp"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Summarized Basic Traffic Results": {
+    "multi_result": {
+      "filters": [],
+      "groups": [],
+      "orders": [
+        "view.test_name ASC"
+      ],
+      "projections": [
+        "view.test_name as test_name",
+        "view.tx_port_basic_stats_total_frame_count as tx_port_basic_stats_total_frame_count",
+        "view.rx_port_basic_stats_total_frame_count as rx_port_basic_stats_total_frame_count",
+        "view.tx_port_basic_stats_total_octet_count as tx_port_basic_stats_total_octet_count",
+        "view.rx_port_basic_stats_total_octet_count as rx_port_basic_stats_total_octet_count",
+        "view.tx_port_basic_stats_total_bit_count as tx_port_basic_stats_total_bit_count",
+        "view.rx_port_basic_stats_total_bit_count as rx_port_basic_stats_total_bit_count",
+        "view.tx_port_basic_stats_generator_sig_frame_count as tx_port_basic_stats_generator_sig_frame_count",
+        "view.rx_port_basic_stats_sig_frame_count as rx_port_basic_stats_sig_frame_count",
+        "view.tx_port_basic_stats_total_frame_rate as tx_port_basic_stats_total_frame_rate",
+        "view.rx_port_basic_stats_total_frame_rate as rx_port_basic_stats_total_frame_rate",
+        "view.tx_port_basic_stats_total_octet_rate as tx_port_basic_stats_total_octet_rate",
+        "view.rx_port_basic_stats_total_octet_rate as rx_port_basic_stats_total_octet_rate",
+        "view.tx_port_basic_stats_total_bit_rate as tx_port_basic_stats_total_bit_rate",
+        "view.rx_port_basic_stats_total_bit_rate as rx_port_basic_stats_total_bit_rate",
+        "view.tx_port_basic_stats_generator_sig_frame_rate as tx_port_basic_stats_generator_sig_frame_rate",
+        "view.rx_port_basic_stats_sig_frame_rate as rx_port_basic_stats_sig_frame_rate",
+        "view.tx_port_basic_stats_generator_bit_rate as tx_port_basic_stats_generator_bit_rate"
+      ],
+      "subqueries": [
+        {
+          "alias": "view",
+          "filters": [
+            "rxpbs.test_name = txpbs.test_name"
+          ],
+          "groups": [],
+          "projections": [
+            "rxpbs.test_name as test_name",
+            "txpbs.total_frame_count as tx_port_basic_stats_total_frame_count",
+            "rxpbs.total_frame_count as rx_port_basic_stats_total_frame_count",
+            "txpbs.total_octet_count as tx_port_basic_stats_total_octet_count",
+            "rxpbs.total_octet_count as rx_port_basic_stats_total_octet_count",
+            "txpbs.total_bit_count as tx_port_basic_stats_total_bit_count",
+            "rxpbs.total_bit_count as rx_port_basic_stats_total_bit_count",
+            "txpbs.generator_sig_frame_count as tx_port_basic_stats_generator_sig_frame_count",
+            "rxpbs.sig_frame_count as rx_port_basic_stats_sig_frame_count",
+            "txpbs.total_frame_rate as tx_port_basic_stats_total_frame_rate",
+            "rxpbs.total_frame_rate as rx_port_basic_stats_total_frame_rate",
+            "txpbs.total_octet_rate as tx_port_basic_stats_total_octet_rate",
+            "rxpbs.total_octet_rate as rx_port_basic_stats_total_octet_rate",
+            "txpbs.total_bit_rate as tx_port_basic_stats_total_bit_rate",
+            "rxpbs.total_bit_rate as rx_port_basic_stats_total_bit_rate",
+            "txpbs.generator_sig_frame_rate as tx_port_basic_stats_generator_sig_frame_rate",
+            "rxpbs.sig_frame_rate as rx_port_basic_stats_sig_frame_rate",
+            "txpbs.generator_bit_rate as tx_port_basic_stats_generator_bit_rate"
+          ],
+          "subqueries": [
+            {
+              "alias": "rxpbs",
+              "filters": [
+                "rx_port_basic_live_stats$last.is_deleted = false"
+              ],
+              "groups": [
+                "test.name"
+              ],
+              "projections": [
+                "sum(rx_port_basic_live_stats$last.total_frame_count) as total_frame_count",
+                "test.name as test_name",
+                "sum(rx_port_basic_live_stats$last.total_octet_count) as total_octet_count",
+                "sum(rx_port_basic_live_stats$last.total_octet_count*8) as total_bit_count",
+                "sum(rx_port_basic_live_stats$last.sig_frame_count) as sig_frame_count",
+                "sum(rx_port_basic_live_stats$last.total_frame_rate) as total_frame_rate",
+                "sum(rx_port_basic_live_stats$last.total_octet_rate) as total_octet_rate",
+                "sum(rx_port_basic_live_stats$last.total_octet_rate*8) as total_bit_rate",
+                "sum(rx_port_basic_live_stats$last.sig_frame_rate) as sig_frame_rate"
+              ]
+            },
+            {
+              "alias": "txpbs",
+              "filters": [
+                "tx_port_basic_live_stats$last.is_deleted = false"
+              ],
+              "groups": [
+                "test.name"
+              ],
+              "projections": [
+                "sum(tx_port_basic_live_stats$last.total_frame_count) as total_frame_count",
+                "test.name as test_name",
+                "sum(tx_port_basic_live_stats$last.total_octet_count) as total_octet_count",
+                "sum(tx_port_basic_live_stats$last.total_octet_count*8) as total_bit_count",
+                "sum(tx_port_basic_live_stats$last.generator_sig_frame_count) as generator_sig_frame_count",
+                "sum(tx_port_basic_live_stats$last.total_frame_rate) as total_frame_rate",
+                "sum(tx_port_basic_live_stats$last.total_octet_rate) as total_octet_rate",
+                "sum(tx_port_basic_live_stats$last.total_octet_rate*8) as total_bit_rate",
+                "sum(tx_port_basic_live_stats$last.generator_sig_frame_rate) as generator_sig_frame_rate",
+                "sum(tx_port_basic_live_stats$last.generator_octet_rate*8) as generator_bit_rate"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },      
+  "Basic Traffic Results": {
+    "multi_result": {
+      "filters": [],
+      "groups": [],
+      "orders": [
+        "view.test_snapshot_name_order ASC",
+        "view.port_name_str_order ASC",
+        "view.port_name_num_order ASC",
+        "view.port_name_ip_order ASC",
+        "view.port_name_hostname_order ASC",
+        "view.port_name_slot_order ASC",
+        "view.port_name_port_num_order ASC"
+      ],
+      "projections": [
+        "view.test_snapshot_name as test_snapshot_name",
+        "view.port_name as port_name",
+        "view.tx_port_basic_stats_total_frame_count as tx_port_basic_stats_total_frame_count",
+        "view.rx_port_basic_stats_total_frame_count as rx_port_basic_stats_total_frame_count",
+        "view.tx_port_basic_stats_total_octet_count as tx_port_basic_stats_total_octet_count",
+        "view.rx_port_basic_stats_total_octet_count as rx_port_basic_stats_total_octet_count",
+        "view.tx_port_basic_stats_total_bit_count as tx_port_basic_stats_total_bit_count",
+        "view.rx_port_basic_stats_total_bit_count as rx_port_basic_stats_total_bit_count",
+        "view.tx_port_basic_stats_generator_sig_frame_count as tx_port_basic_stats_generator_sig_frame_count",
+        "view.rx_port_basic_stats_sig_frame_count as rx_port_basic_stats_sig_frame_count"
+      ],
+      "subqueries": [
+        {
+          "alias": "view",
+          "filters": [
+            "rxpbs.port_name=txpbs.port_name",
+            "rxpbs.test_snapshot_name=txpbs.test_snapshot_name"
+          ],
+          "groups": [],
+          "projections": [
+            "rxpbs.test_snapshot_name as test_snapshot_name",
+            "rxpbs.port_name as port_name",
+            "txpbs.total_frame_count as tx_port_basic_stats_total_frame_count",
+            "rxpbs.total_frame_count as rx_port_basic_stats_total_frame_count",
+            "txpbs.total_octet_count as tx_port_basic_stats_total_octet_count",
+            "rxpbs.total_octet_count as rx_port_basic_stats_total_octet_count",
+            "txpbs.total_bit_count as tx_port_basic_stats_total_bit_count",
+            "rxpbs.total_bit_count as rx_port_basic_stats_total_bit_count",
+            "txpbs.generator_sig_frame_count as tx_port_basic_stats_generator_sig_frame_count",
+            "rxpbs.sig_frame_count as rx_port_basic_stats_sig_frame_count",
+            "rxpbs.test_snapshot_name_order as test_snapshot_name_order",
+            "rxpbs.port_name_str_order as port_name_str_order",
+            "rxpbs.port_name_num_order as port_name_num_order",
+            "rxpbs.port_name_ip_order as port_name_ip_order",
+            "rxpbs.port_name_hostname_order as port_name_hostname_order",
+            "rxpbs.port_name_slot_order as port_name_slot_order",
+            "rxpbs.port_name_port_num_order as port_name_port_num_order"
+          ],
+          "subqueries": [
+            {
+              "alias": "rxpbs",
+              "filters": [],
+              "groups": [],
+              "projections": [
+                "port.name as port_name",
+                "(rx_port_basic_stats.total_frame_count) as total_frame_count",
+                "test.snapshot_name as test_snapshot_name",
+                "(rx_port_basic_stats.total_octet_count) as total_octet_count",
+                "(rx_port_basic_stats.total_octet_count*8) as total_bit_count",
+                "(rx_port_basic_stats.sig_frame_count) as sig_frame_count",
+                "test.snapshot_name_order as test_snapshot_name_order",
+                "port.name_str_order as port_name_str_order",
+                "port.name_num_order as port_name_num_order",
+                "port.name_ip_order as port_name_ip_order",
+                "port.name_hostname_order as port_name_hostname_order",
+                "port.name_slot_order as port_name_slot_order",
+                "port.name_port_num_order as port_name_port_num_order"
+              ]
+            },
+            {
+              "alias": "txpbs",
+              "filters": [],
+              "groups": [],
+              "projections": [
+                "port.name as port_name",
+                "(tx_port_basic_stats.total_frame_count) as total_frame_count",
+                "test.snapshot_name as test_snapshot_name",
+                "(tx_port_basic_stats.total_octet_count) as total_octet_count",
+                "(tx_port_basic_stats.total_octet_count*8) as total_bit_count",
+                "(tx_port_basic_stats.generator_sig_frame_count) as generator_sig_frame_count"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Flooded Stream Results": {
+    "multi_result": {
+      "filters": [],
+      "groups": [],
+      "orders": [
+        "view.test_snapshot_name_order ASC",
+        "view.tx_stream_stream_id ASC",
+        "view.rx_stream_key ASC"
+      ],
+      "projections": [
+        "view.test_snapshot_name as test_snapshot_name",
+        "view.stream_block_name as stream_block_name",
+        "view.tx_stream_stream_id as tx_stream_stream_id",
+        "view.tx_port_name as tx_port_name",
+        "view.rx_port_name as rx_port_name",
+        "view.rx_stream_is_flooded as rx_stream_is_flooded",
+        "view.tx_stream_stats_frame_count as tx_stream_stats_frame_count",
+        "view.rx_stream_stats_frame_count as rx_stream_stats_frame_count",
+        "view.rx_stream_key as rx_stream_key"
+      ],
+      "subqueries": [
+        {
+          "alias": "view",
+          "filters": [
+            "rxss.tx_stream_stream_id=txss.tx_stream_stream_id",
+            "rxss.test_snapshot_name=txss.test_snapshot_name"
+          ],
+          "groups": [],
+          "projections": [
+            "rxss.test_snapshot_name as test_snapshot_name",
+            "rxss.stream_block_name as stream_block_name",
+            "rxss.tx_stream_stream_id as tx_stream_stream_id",
+            "rxss.tx_port_name as tx_port_name",
+            "rxss.rx_port_name as rx_port_name",
+            "rxss.rx_stream_is_flooded as rx_stream_is_flooded",
+            "txss.frame_count as tx_stream_stats_frame_count",
+            "rxss.frame_count as rx_stream_stats_frame_count",
+            "rxss.test_snapshot_name_order as test_snapshot_name_order",
+            "rxss.rx_stream_key as rx_stream_key"
+          ],
+          "subqueries": [
+            {
+              "alias": "rxss",
+              "filters": [
+                "rx_stream.is_flooded = TRUE",
+                "(rx_stream_stats.frame_count) > 0"
+              ],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "rx_port.name as rx_port_name",
+                "(rx_stream_stats.frame_count) as frame_count",
+                "test.snapshot_name as test_snapshot_name",
+                "rx_stream.is_flooded as rx_stream_is_flooded",
+                "test.snapshot_name_order as test_snapshot_name_order",
+                "rx_stream.key as rx_stream_key"
+              ]
+            },
+            {
+              "alias": "txss",
+              "filters": [],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "(tx_stream_stats.frame_count) as frame_count",
+                "test.snapshot_name as test_snapshot_name"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Stream Results": {
+    "multi_result": {
+      "filters": [],
+      "groups": [],
+      "orders": [
+        "view.test_snapshot_name_order ASC",
+        "view.tx_stream_stream_id ASC",
+        "view.rx_stream_key ASC"
+      ],
+      "projections": [
+        "view.test_snapshot_name as test_snapshot_name",
+        "view.stream_block_name as stream_block_name",
+        "view.tx_stream_stream_id as tx_stream_stream_id",
+        "view.tx_port_name as tx_port_name",
+        "view.rx_port_name as rx_port_name",
+        "view.tx_stream_stats_frame_count as tx_stream_stats_frame_count",
+        "view.rx_stream_stats_frame_count as rx_stream_stats_frame_count",
+        "view.stream_stats_frame_loss as stream_stats_frame_loss",
+        "view.rx_stream_stats_dropped_frame_count as rx_stream_stats_dropped_frame_count",
+        "view.rx_stream_stats_min_latency as rx_stream_stats_min_latency",
+        "view.rx_stream_stats_avg_latency as rx_stream_stats_avg_latency",
+        "view.rx_stream_stats_max_latency as rx_stream_stats_max_latency",
+        "view.rx_stream_stats_duplicate_frame_count as rx_stream_stats_duplicate_frame_count",
+        "view.rx_stream_stats_out_seq_frame_count as rx_stream_stats_out_seq_frame_count",
+        "view.rx_stream_key as rx_stream_key"
+      ],
+      "subqueries": [
+        {
+          "alias": "view",
+          "filters": [
+            "rxss.tx_stream_stream_id=txss.tx_stream_stream_id",
+            "rxss.test_snapshot_name=txss.test_snapshot_name"
+          ],
+          "groups": [],
+          "projections": [
+            "rxss.test_snapshot_name as test_snapshot_name",
+            "rxss.stream_block_name as stream_block_name",
+            "rxss.tx_stream_stream_id as tx_stream_stream_id",
+            "rxss.tx_port_name as tx_port_name",
+            "rxss.rx_port_name as rx_port_name",
+            "txss.frame_count as tx_stream_stats_frame_count",
+            "rxss.frame_count as rx_stream_stats_frame_count",
+            "greatest(0, (txss.frame_count - (rxss.frame_count - greatest(0, rxss.duplicate_frame_count)))) as stream_stats_frame_loss",
+            "rxss.dropped_frame_count as rx_stream_stats_dropped_frame_count",
+            "rxss.min_latency as rx_stream_stats_min_latency",
+            "rxss.avg_latency as rx_stream_stats_avg_latency",
+            "rxss.max_latency as rx_stream_stats_max_latency",
+            "rxss.duplicate_frame_count as rx_stream_stats_duplicate_frame_count",
+            "rxss.out_seq_frame_count as rx_stream_stats_out_seq_frame_count",
+            "rxss.test_snapshot_name_order as test_snapshot_name_order",
+            "rxss.rx_stream_key as rx_stream_key"
+          ],
+          "subqueries": [
+            {
+              "alias": "rxss",
+              "filters": [],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "rx_port.name as rx_port_name",
+                "(rx_stream_stats.frame_count) as frame_count",
+                "test.snapshot_name as test_snapshot_name",
+                "(rx_stream_stats.duplicate_frame_count) as duplicate_frame_count",
+                "(rx_stream_stats.dropped_frame_count) as dropped_frame_count",
+                "(rx_stream_stats.min_latency) as min_latency",
+                "(rx_stream_stats.total_latency/rx_stream_stats.frame_count) as avg_latency",
+                "(rx_stream_stats.max_latency) as max_latency",
+                "(rx_stream_stats.out_seq_frame_count) as out_seq_frame_count",
+                "test.snapshot_name_order as test_snapshot_name_order",
+                "rx_stream.key as rx_stream_key"
+              ]
+            },
+            {
+              "alias": "txss",
+              "filters": [],
+              "groups": [],
+              "projections": [
+                "stream_block.name as stream_block_name",
+                "tx_stream.stream_id as tx_stream_stream_id",
+                "tx_port.name as tx_port_name",
+                "(tx_stream_stats.frame_count) as frame_count",
+                "test.snapshot_name as test_snapshot_name"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
