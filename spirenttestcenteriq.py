@@ -1,23 +1,6 @@
 #!/usr/bin/env python
 """Provides a Python front-end for the Spirent TestCenter IQ ReST API.
-
-
-NOTE: The duration specification can be found in ISO 8601:
-      https://en.wikipedia.org/wiki/ISO_8601
-
-
-Durations define the amount of intervening time in a time interval and are represented by the format P[n]Y[n]M[n]DT[n]H[n]M[n]S or P[n]W as shown to the right. In these representations, the [n] is replaced by the value for each of the date and time elements that follow the [n]. Leading zeros are not required, but the maximum number of digits for each element should be agreed to by the communicating parties. The capital letters P, Y, M, W, D, T, H, M, and S are designators for each of the date and time elements and are not replaced.
-    PnYnMnDTnHnMnS
-
-    P is the duration designator (for period) placed at the start of the duration representation.
-    Y is the year designator that follows the value for the number of years.
-    M is the month designator that follows the value for the number of months.
-    W is the week designator that follows the value for the number of weeks.
-    D is the day designator that follows the value for the number of days.
-    T is the time designator that precedes the time components of the representation.
-    H is the hour designator that follows the value for the number of hours.
-    M is the minute designator that follows the value for the number of minutes.
-    S is the second designator that follows the value for the number of seconds.      
+    
 """
 
 import sys
@@ -94,7 +77,7 @@ def deepupdate(target, src):
             target[k] = copy.copy(v)
         
 class SpirentTestCenterIQ:
-    def __init__(self, iq_server_ip=None, iq_server_port=9200, verbose=False, log_path=None, log_level="INFO", query_definitions_file=None, stc_api_instance=None):
+    def __init__(self, iq_server_ip=None, iq_server_port=9199, verbose=False, log_path=None, log_level="INFO", query_definitions_file=None, stc_api_instance=None):
 
         self.query_definitions = {}        
 
@@ -195,7 +178,7 @@ class SpirentTestCenterIQ:
 
         full_query["database"] = {}
         if db_id is None:
-            full_query["database"]["id"] = self.get_db_id()
+            full_query["database"]["id"] = self.get_session_db_id()
         else:
             full_query["database"]["id"] = db_id
         
@@ -227,7 +210,7 @@ class SpirentTestCenterIQ:
 
         """        
         if db_id is None:
-            db_id = self.get_db_id()          
+            db_id = self.get_session_db_id()          
 
         response = None
         if view_name in self.query_definitions.keys():
@@ -470,7 +453,7 @@ class SpirentTestCenterIQ:
         """    
 
         if not db_id:
-            db_id = self.get_db_id()
+            db_id = self.get_session_db_id()
     
         if summary:
             db_info = self.__execute("get", "databases/" + db_id + "?detail=summary")
@@ -561,6 +544,18 @@ class SpirentTestCenterIQ:
                     result_writer.writerow(row)        
 
         return
+
+    #==============================================================================
+    def from_iso_format(self, timestamp):
+        # Return a date corresponding to a date_string given in the format YYYY-MM-DDTHH:MM:SS.UUUUUUZ.
+        # NOTE: This method is natively available in Python 3.7 and later.
+        return datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    #==============================================================================
+    def iso_format(self, timestamp):
+        # Return a string representing the date in ISO 8601 format YYYY-MM-DDTHH:MM:SS.UUUUUUZ.
+        # NOTE: This method is natively available in Python 3.7 and later.
+        return timestamp.strftime("%Y-%m-%dT%H:%M:%S.%fZ")        
 
     #==============================================================================
     def __execute(self, cmdtype, url, payload=None):
@@ -913,6 +908,7 @@ class IqQuery:
         self.filters = []
         self.groups = []
         self.orders = []
+        self.timestamp_range = {}
         self.limit = None
         self.pagination = None
        
@@ -930,6 +926,7 @@ class IqQuery:
         query["filters"] = self.filters
         query["groups"] = self.groups
         query["orders"] = self.orders
+        query["timestamp_range"] = self.timestamp_range
         query["limit"] = self.limit
         query["pagination"] = self.pagination
 
@@ -957,6 +954,51 @@ class IqQuery:
 
     def delete_orders(self):
         self.orders = []
+
+    def add_timestamp_range(self, timestamp=None):
+
+        self.timestamp_range = {}
+        if timestamp:
+            self.timestamp_range = timestamp
+
+        return
+
+    def add_timestamp_range_absolute(self, start=None, end=None):
+
+        self.timestamp_range = {}        
+
+        if start or end:
+            self.timestamp_range["absolute"] = {}
+
+            if start:
+                if not isinstance(start, str):
+                    # This is probably a datetime object.
+                    startstr = self.db.iq.iso_format(start)
+                else:
+                    startstr = start
+
+                self.timestamp_range["absolute"]["start"] = startstr
+
+            if end:
+                if not isinstance(end, str):
+                    # This is probably a datetime object.
+                    endstr = self.db.iq.iso_format(end)
+                else:
+                    endstr = end
+
+                self.timestamp_range["absolute"]["end"] = endstr
+
+        return                
+
+    def add_timestamp_range_relative(self, interval=None):
+        # Example intervals are "PT1M" and "PT1H".
+        self.timestamp_range = {}
+        
+        if interval:
+            self.timestamp_range["relative"] = {}
+            self.timestamp_range["relative"]["interval"] = interval
+
+        return                        
 
     def add_limit(self):
         return
@@ -986,9 +1028,6 @@ class IqSingleQuery(IqQuery):
     def refresh_columns_info(self, latest=False):
         self.columns_info = self.iq_set.get_columns_info(latest)
         self.columns = self.columns_info["column_alias_list"]        
-        return
-
-    def add_timestamp_range(self):
         return
 
     def get_query(self, latest=False):
@@ -1086,9 +1125,14 @@ class IqMultiQuery(IqQuery):
         
         return query     
 
-    def execute(self, latest=False):        
+    def execute(self, latest=False, custom_query=None):        
         query = {}
-        query["multi_result"] = self.get_query(latest)
+        
+        if not custom_query:
+            query["multi_result"] = self.get_query(latest)
+        else:
+            query["multi_result"] = custom_query
+
         result = self.db.iq.execute_query(query, db_id=self.db.id)
         return result                 
 
